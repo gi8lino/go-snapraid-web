@@ -1,0 +1,27 @@
+{
+  "timestamp": "2025-06-04T04:00:01Z",
+  "result": {
+    "equal": 21154,
+    "added": 5,
+    "removed": 0,
+    "updated": 0,
+    "moved": 0,
+    "copied": 0,
+    "restored": 0,
+    "added_files": [
+      "serien/Sirens\\ \\(2025\\)/Sirens.2025.S01E04.German.DL.720p.WEB.x264-WvF.mkv",
+      "serien/Sirens\\ \\(2025\\)/Sirens.2025.S01E01.German.DL.720p.WEB.x264-WvF.mkv",
+      "serien/Sirens\\ \\(2025\\)/Sirens.2025.S01E03.German.DL.720p.WEB.x264-WvF.mkv",
+      "serien/Sirens\\ \\(2025\\)/Sirens.2025.S01E05.German.DL.720p.WEB.x264-WvF.mkv",
+      "serien/Sirens\\ \\(2025\\)/Sirens.2025.S01E02.German.DL.720p.WEB.x264-WvF.mkv"
+    ]
+  },
+  "timings": {
+    "touch": 37344697435,
+    "diff": 5704603257,
+    "sync": 111219968987,
+    "scrub": 0,
+    "smart": 14266369,
+    "total": 154283848363
+  }
+}

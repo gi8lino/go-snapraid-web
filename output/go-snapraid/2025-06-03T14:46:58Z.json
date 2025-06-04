@@ -1,0 +1,23 @@
+{
+  "timestamp": "2025-06-03T14:46:58Z",
+  "result": {
+    "equal": 21153,
+    "added": 1,
+    "removed": 0,
+    "updated": 0,
+    "moved": 0,
+    "copied": 0,
+    "restored": 0,
+    "added_files": [
+      "filme/Sinners\\ \\(2025\\)/Blood.and.Sinners.2025.German.EAC3.DL.1080p.IMAX.WEBRiP.x265-P73.mkv"
+    ]
+  },
+  "timings": {
+    "touch": 31632980553,
+    "diff": 5840552496,
+    "sync": 76712149903,
+    "scrub": 0,
+    "smart": 192506890,
+    "total": 114378321958
+  }
+}

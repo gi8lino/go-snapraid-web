@@ -1,0 +1,24 @@
+{{ define "base" }}
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>go-snapraid</title>
+    <link rel="stylesheet" href="/static/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="/static/css/go-snapraid.css" />
+  </head>
+  <body class="d-flex flex-column min-vh-100">
+    {{ template "navbar" . }}
+
+    <main
+      class="container flex-grow-1 overflow-hidden"
+      style="padding-top: 60px; padding-bottom: 60px"
+      id="content"
+    >
+      <!-- partials will be injected here -->
+    </main>
+
+    {{ template "footer" . }}
+  </body>
+</html>
+{{ end }}

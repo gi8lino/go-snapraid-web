@@ -1,0 +1,5 @@
+.env
+bin/*
+local-config.yaml
+cover.out
+coverage.out

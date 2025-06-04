@@ -1,0 +1,114 @@
+{{ define "details" }}
+<div class="row mb-3">
+  <div class="col-auto">
+    <label for="runSelector" class="form-label">Select Run:</label>
+  </div>
+  <div class="col">
+    <select id="runSelector" class="form-select form-select-sm w-auto">
+      {{ range .AllTimestamps }}
+      <option value="{{ . }}" {{ if eq . $.Detail.Timestamp }}selected{{ end }}>
+        {{ . }}
+      </option>
+      {{ end }}
+    </select>
+  </div>
+</div>
+
+<h3>Run Details for {{ .Detail.Date }}</h3>
+<div class="table-responsive">
+  <table class="table table-striped table-hover">
+    <thead class="table-primary">
+      <tr>
+        <th>Category</th>
+        <th>Files</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>Added</td>
+        <td>
+          {{ if .Detail.AddedFiles }}
+          <div class="file-list">
+            {{- range .Detail.AddedFiles }}
+            <div class="file-item">{{ . }}</div>
+            {{- end }}
+          </div>
+          {{ else }}
+          <em>none</em>
+          {{ end }}
+        </td>
+      </tr>
+      <tr>
+        <td>Removed</td>
+        <td>
+          {{ if .Detail.RemovedFiles }}
+          <div class="file-list">
+            {{- range .Detail.RemovedFiles }}
+            <div class="file-item">{{ . }}</div>
+            {{- end }}
+          </div>
+          {{ else }}
+          <em>none</em>
+          {{ end }}
+        </td>
+      </tr>
+      <tr>
+        <td>Updated</td>
+        <td>
+          {{ if .Detail.UpdatedFiles }}
+          <div class="file-list">
+            {{- range .Detail.UpdatedFiles }}
+            <div class="file-item">{{ . }}</div>
+            {{- end }}
+          </div>
+          {{ else }}
+          <em>none</em>
+          {{ end }}
+        </td>
+      </tr>
+      <tr>
+        <td>Moved</td>
+        <td>
+          {{ if .Detail.MovedFiles }}
+          <div class="file-list">
+            {{- range .Detail.MovedFiles }}
+            <div class="file-item">{{ . }}</div>
+            {{- end }}
+          </div>
+          {{ else }}
+          <em>none</em>
+          {{ end }}
+        </td>
+      </tr>
+      <tr>
+        <td>Copied</td>
+        <td>
+          {{ if .Detail.CopiedFiles }}
+          <div class="file-list">
+            {{- range .Detail.CopiedFiles }}
+            <div class="file-item">{{ . }}</div>
+            {{- end }}
+          </div>
+          {{ else }}
+          <em>none</em>
+          {{ end }}
+        </td>
+      </tr>
+      <tr>
+        <td>Restored</td>
+        <td>
+          {{ if .Detail.RestoredFiles }}
+          <div class="file-list">
+            {{- range .Detail.RestoredFiles }}
+            <div class="file-item">{{ . }}</div>
+            {{- end }}
+          </div>
+          {{ else }}
+          <em>none</em>
+          {{ end }}
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+{{ end }}

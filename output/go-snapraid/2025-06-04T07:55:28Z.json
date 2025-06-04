@@ -1,0 +1,29 @@
+{
+  "timestamp": "2025-06-04T07:55:28Z",
+  "result": {
+    "equal": 21156,
+    "added": 2,
+    "removed": 3,
+    "updated": 0,
+    "moved": 0,
+    "copied": 0,
+    "restored": 0,
+    "added_files": [
+      "serien/FBI/FBI.S06E13.GERMAN.720P.WEB.H264-WAYNE.mkv",
+      "serien/FBI\\ -\\ Most\\ Wanted/FBI.Most.Wanted.S05E13.GERMAN.720P.WEB.H264-WAYNE.mkv"
+    ],
+    "removed_files": [
+      "filme/Zoolander\\ \\(2001\\)/Zoolander.2001.German.AC3.DL.1080p.BluRay.x265-FuN.mkv",
+      "filme/Zoolander\\ 2\\ \\(2016\\)/Zoolander.2.2016.German.AC3.DL.1080p.BluRay.x265-FuN.mkv",
+      "filme/XOXO\\ \\(2016\\)/XOXO.2016.German.DL.1080p.WEB.x264.iNTERNAL-BiGiNT.mkv"
+    ]
+  },
+  "timings": {
+    "touch": 0,
+    "diff": 5288688728,
+    "sync": 0,
+    "scrub": 0,
+    "smart": 0,
+    "total": 5288775968
+  }
+}

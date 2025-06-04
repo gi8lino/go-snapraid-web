@@ -1,0 +1,20 @@
+{
+  "timestamp": "2025-06-04T06:27:11Z",
+  "result": {
+    "equal": 21159,
+    "added": 0,
+    "removed": 0,
+    "updated": 0,
+    "moved": 0,
+    "copied": 0,
+    "restored": 0
+  },
+  "timings": {
+    "touch": 35040482027,
+    "diff": 7402951545,
+    "sync": 0,
+    "scrub": 0,
+    "smart": 0,
+    "total": 42443522738
+  }
+}

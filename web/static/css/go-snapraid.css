@@ -1,0 +1,134 @@
+:root {
+  --bs-primary: #212529; /* Almost black for headers/navbar */
+  --bs-secondary: #f8f3f5; /* Pale rose for body & footer background */
+  --bs-dark: #000000; /* Pure black */
+  --bs-light: #f8f9fa; /* Light gray for contrast */
+}
+
+/* Global styles */
+body {
+  background-color: var(--bs-secondary);
+  color: var(--bs-light);
+}
+
+h3 {
+  color: var(--bs-dark);
+}
+
+.form-label {
+  color: var(--bs-dark);
+}
+
+/* Navbar */
+.navbar {
+  background-color: var(--bs-primary);
+}
+
+.navbar .nav-link {
+  border-radius: 0.25rem;
+  color: var(--bs-light);
+  text-decoration: none;
+  transition: background-color 0.2s ease;
+}
+
+.navbar .nav-link.active {
+  background-color: var(--bs-dark);
+  color: var(--bs-light);
+}
+
+.navbar .nav-link:hover {
+  background-color: var(--bs-light);
+  color: var(--bs-dark);
+}
+
+/* Table styles */
+.table thead th,
+.table-primary th {
+  background-color: var(--bs-primary);
+  color: var(--bs-light);
+}
+
+.table-striped > tbody > tr:nth-of-type(even) {
+  background-color: #1e1e1e;
+}
+
+.table-striped > tbody > tr:nth-of-type(odd) {
+  background-color: #2a2a2a;
+}
+
+/* Tablesort integration */
+th[aria-sort] {
+  cursor: pointer;
+  position: relative;
+}
+
+th[aria-sort]::after {
+  color: var(--bs-light);
+  content: "";
+  font-size: 0.75em;
+  margin-left: 2px;
+  opacity: 0.75;
+  pointer-events: none;
+  transform: translateY(-50%);
+}
+
+th[aria-sort="ascending"]::after {
+  content: "▲";
+}
+
+th[aria-sort="descending"]::after {
+  content: "▼";
+}
+
+/* Filters */
+.input-group.filter {
+  border-radius: 0.25rem;
+  position: relative;
+}
+
+.with-clear {
+  padding-right: 2.5rem;
+}
+
+.clear-filter-btn {
+  background: transparent;
+  border: none;
+  color: var(--bs-primary);
+  cursor: pointer;
+  display: none;
+  font-size: 1.2rem;
+  line-height: 1;
+  position: absolute;
+  right: 0.75rem;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 10;
+}
+
+.with-clear:not(:placeholder-shown) + .clear-filter-btn,
+.with-clear:valid + .clear-filter-btn {
+  display: block;
+}
+
+/* File list */
+.file-list {
+  max-height: 200px;
+  overflow-y: auto;
+  background: none;
+  border: none;
+  padding: 0; /* remove padding */
+  margin: 0; /* just in case */
+  color: var(--bs-dark);
+}
+
+.file-item {
+  padding: 0; /* remove vertical padding */
+  margin: 0; /* remove margin */
+  border: none; /* remove any separator if added before */
+}
+
+/* Footer */
+.footer {
+  background-color: var(--bs-primary);
+  color: var(--bs-light);
+}
