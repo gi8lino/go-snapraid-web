@@ -1,5 +1,5 @@
 ---
-project_name: go-snapraid-webui
+project_name: go-snapraid-web
 before:
   hooks:
     - go mod tidy
@@ -18,7 +18,7 @@ builds:
       - -X main.Commit={{ .FullCommit }}
 dockers:
   - image_templates:
-      - ghcr.io/gi8lino/go-snapraid-webui:{{ .Tag }}-amd64
+      - ghcr.io/gi8lino/go-snapraid-web:{{ .Tag }}-amd64
     use: buildx
     dockerfile: Dockerfile
     extra_files:
@@ -34,16 +34,16 @@ dockers:
       - --platform=linux/amd64
       - --label=org.opencontainers.image.title={{ .ProjectName }}
       - --label=org.opencontainers.image.description={{ .ProjectName }}
-      - --label=org.opencontainers.image.url=https://github.com/gi8lino/go-snapraid-webui
-      - --label=org.opencontainers.image.source=https://github.com/gi8lino/go-snapraid-webui
+      - --label=org.opencontainers.image.url=https://github.com/gi8lino/go-snapraid-web
+      - --label=org.opencontainers.image.source=https://github.com/gi8lino/go-snapraid-web
       - --label=org.opencontainers.image.version={{ .Version }}
       - --label=org.opencontainers.image.created={{ time "2006-01-02T15:04:05Z07:00" }}
       - --label=org.opencontainers.image.revision={{ .FullCommit }}
       - --label=org.opencontainers.image.licenses="GNU General Public License v3.0"
 docker_manifests:
-  - name_template: ghcr.io/gi8lino/go-snapraid-webui:{{ .Tag }}
+  - name_template: ghcr.io/gi8lino/go-snapraid-web:{{ .Tag }}
     image_templates:
-      - ghcr.io/gi8lino/go-snapraid-webui:{{ .Tag }}-amd64
-  - name_template: ghcr.io/gi8lino/go-snapraid-webui:latest
+      - ghcr.io/gi8lino/go-snapraid-web:{{ .Tag }}-amd64
+  - name_template: ghcr.io/gi8lino/go-snapraid-web:latest
     image_templates:
-      - ghcr.io/gi8lino/go-snapraid-webui:{{ .Tag }}-amd64
+      - ghcr.io/gi8lino/go-snapraid-web:{{ .Tag }}-amd64
