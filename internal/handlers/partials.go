@@ -21,27 +21,29 @@ import (
 	"github.com/gi8lino/go-snapraid/pkg/snapraid"
 )
 
+// OverviewView represents a summarized SnapRAID run for display in the overview table.
 type OverviewView struct {
-	Timestamp string
-	Date      string
-	Total     int
-	TouchTime time.Duration
-	DiffTime  time.Duration
-	SyncTime  time.Duration
-	ScrubTime time.Duration
-	SmartTime time.Duration
-	TotalTime time.Duration
+	Timestamp string        // original RFC3339 timestamp used as run ID
+	Date      string        // formatted timestamp for display
+	Total     int           // total number of file changes
+	TouchTime time.Duration // duration of `touch` step
+	DiffTime  time.Duration // duration of `diff` step
+	SyncTime  time.Duration // duration of `sync` step
+	ScrubTime time.Duration // duration of `scrub` step
+	SmartTime time.Duration // duration of `smart` step
+	TotalTime time.Duration // total runtime duration
 }
 
+// RunView represents detailed file-level changes for a specific SnapRAID run.
 type RunView struct {
-	Timestamp     string
-	Date          string
-	AddedFiles    []string
-	RemovedFiles  []string
-	UpdatedFiles  []string
-	MovedFiles    []string
-	CopiedFiles   []string
-	RestoredFiles []string
+	Timestamp     string   // run ID / timestamp
+	Date          string   // formatted run timestamp
+	AddedFiles    []string // list of added files
+	RemovedFiles  []string // list of removed files
+	UpdatedFiles  []string // list of updated files
+	MovedFiles    []string // list of moved files
+	CopiedFiles   []string // list of copied files
+	RestoredFiles []string // list of restored files
 }
 
 type notFoundError struct {
@@ -50,6 +52,7 @@ type notFoundError struct {
 
 func (e *notFoundError) Error() string { return e.msg }
 
+// PartialHandler returns an HTTP handler that renders HTML templates for partial sections.
 func PartialHandler(
 	webFS fs.FS,
 	outputDir string,
@@ -68,24 +71,26 @@ func PartialHandler(
 	return func(w http.ResponseWriter, r *http.Request) {
 		section := path.Base(r.URL.Path)
 		var err error
+
 		switch section {
 		case "overview":
 			err = renderOverview(w, tmpl, outputDir)
 
 		case "run":
-			id := r.URL.Query().Get("id")
-			if id == "" {
-				id, err = findLatestRunID(outputDir)
+			runID := r.URL.Query().Get("id")
+			if runID == "" {
+				runID, err = findLatestRunID(outputDir)
 				if err != nil {
 					break
 				}
 			}
-			err = renderRun(w, tmpl, outputDir, id)
+			err = renderRun(w, tmpl, outputDir, runID)
 			if errors.As(err, new(*notFoundError)) {
 				logger.Error("no run files found or glob failed", "error", err)
 				http.NotFound(w, r)
 				return
 			}
+
 		default:
 			http.NotFound(w, r)
 		}
@@ -97,6 +102,7 @@ func PartialHandler(
 	}
 }
 
+// renderOverview renders the overview partial with a summary of all runs.
 func renderOverview(
 	w io.Writer,
 	tmpl *template.Template,
@@ -108,38 +114,38 @@ func renderOverview(
 	}
 
 	var rows []OverviewView
-	for _, fullpath := range matches {
-		ts := strings.TrimSuffix(filepath.Base(fullpath), ".json")
-		dt, err := time.Parse(time.RFC3339, ts)
+	for _, fullPath := range matches {
+		timestampStr := strings.TrimSuffix(filepath.Base(fullPath), ".json")
+		timestamp, err := time.Parse(time.RFC3339, timestampStr)
 		if err != nil {
 			continue
 		}
 
-		f, err := os.Open(fullpath)
+		f, err := os.Open(fullPath)
 		if err != nil {
-			return fmt.Errorf("open file %q failed: %w", fullpath, err)
+			return fmt.Errorf("open file %q failed: %w", fullPath, err)
 		}
 		defer f.Close() // nolint:errcheck
 
-		var rr snapraid.RunResult
-		if err := json.NewDecoder(f).Decode(&rr); err != nil {
-			return fmt.Errorf("JSON decode of %q failed: %w", fullpath, err)
+		var result snapraid.RunResult
+		if err := json.NewDecoder(f).Decode(&result); err != nil {
+			return fmt.Errorf("JSON decode of %q failed: %w", fullPath, err)
 		}
 
-		sum := rr.Result
-		totalChanges := len(sum.Added) + len(sum.Removed) + len(sum.Updated) +
-			len(sum.Moved) + len(sum.Copied) + len(sum.Restored)
+		stats := result.Result
+		total := len(stats.Added) + len(stats.Removed) + len(stats.Updated) +
+			len(stats.Moved) + len(stats.Copied) + len(stats.Restored)
 
 		rows = append(rows, OverviewView{
-			Timestamp: ts,
-			Date:      dt.Format("2006-01-02 15:04"),
-			Total:     totalChanges,
-			TouchTime: rr.Timings.Touch,
-			DiffTime:  rr.Timings.Diff,
-			SyncTime:  rr.Timings.Sync,
-			ScrubTime: rr.Timings.Scrub,
-			SmartTime: rr.Timings.Smart,
-			TotalTime: rr.Timings.Total,
+			Timestamp: timestampStr,
+			Date:      timestamp.Format(time.RFC3339),
+			Total:     total,
+			TouchTime: result.Timings.Touch,
+			DiffTime:  result.Timings.Diff,
+			SyncTime:  result.Timings.Sync,
+			ScrubTime: result.Timings.Scrub,
+			SmartTime: result.Timings.Smart,
+			TotalTime: result.Timings.Total,
 		})
 	}
 
@@ -154,28 +160,29 @@ func renderOverview(
 	})
 }
 
+// renderRun renders the detailed view for a single SnapRAID run.
 func renderRun(
 	w io.Writer,
 	tmpl *template.Template,
 	outputDir string,
-	id string,
+	runID string,
 ) error {
-	fullpath := filepath.Join(outputDir, id+".json")
-	f, err := os.Open(fullpath)
+	fullPath := filepath.Join(outputDir, runID+".json")
+	f, err := os.Open(fullPath)
 	if err != nil {
 		if os.IsNotExist(err) {
-			return &notFoundError{fmt.Sprintf("run %q not found", id)}
+			return &notFoundError{fmt.Sprintf("run %q not found", runID)}
 		}
-		return fmt.Errorf("open detail file %q failed: %w", fullpath, err)
+		return fmt.Errorf("open detail file %q failed: %w", fullPath, err)
 	}
 	defer f.Close() // nolint:errcheck
 
-	var rr snapraid.RunResult
-	if err := json.NewDecoder(f).Decode(&rr); err != nil {
-		return fmt.Errorf("JSON decode %q failed: %w", fullpath, err)
+	var result snapraid.RunResult
+	if err := json.NewDecoder(f).Decode(&result); err != nil {
+		return fmt.Errorf("JSON decode %q failed: %w", fullPath, err)
 	}
 
-	// Build dropdown list
+	// build dropdown list
 	matches, err := filepath.Glob(filepath.Join(outputDir, "*.json"))
 	if err != nil {
 		return fmt.Errorf("glob for dropdown failed: %w", err)
@@ -185,7 +192,6 @@ func renderRun(
 		ts := strings.TrimSuffix(filepath.Base(file), ".json")
 		allTimestamps = append(allTimestamps, ts)
 	}
-
 	slices.Sort(allTimestamps)
 
 	return tmpl.ExecuteTemplate(w, "run", struct {
@@ -193,25 +199,25 @@ func renderRun(
 		AllTimestamps []string
 	}{
 		Run: RunView{
-			Timestamp:     id,
-			Date:          rr.Timestamp,
-			AddedFiles:    rr.Result.Added,
-			RemovedFiles:  rr.Result.Removed,
-			UpdatedFiles:  rr.Result.Updated,
-			MovedFiles:    rr.Result.Moved,
-			CopiedFiles:   rr.Result.Copied,
-			RestoredFiles: rr.Result.Restored,
+			Timestamp:     runID,
+			Date:          result.Timestamp,
+			AddedFiles:    result.Result.Added,
+			RemovedFiles:  result.Result.Removed,
+			UpdatedFiles:  result.Result.Updated,
+			MovedFiles:    result.Result.Moved,
+			CopiedFiles:   result.Result.Copied,
+			RestoredFiles: result.Result.Restored,
 		},
 		AllTimestamps: allTimestamps,
 	})
 }
 
+// findLatestRunID returns the most recent run file's ID from the output directory.
 func findLatestRunID(outputDir string) (string, error) {
 	matches, err := filepath.Glob(filepath.Join(outputDir, "*.json"))
 	if err != nil || len(matches) == 0 {
 		return "", fmt.Errorf("no run files found or glob failed: %w", err)
 	}
-
 	slices.Sort(matches)
 	latest := filepath.Base(matches[0])
 	return strings.TrimSuffix(latest, ".json"), nil

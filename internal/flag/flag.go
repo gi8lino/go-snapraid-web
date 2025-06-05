@@ -10,39 +10,39 @@ import (
 	flag "github.com/spf13/pflag"
 )
 
-// HelpRequested indicates that help was requested.
+// HelpRequested indicates that help was requested via a CLI flag.
 type HelpRequested struct {
-	Message string // Message is the help message.
+	Message string // help message to return as error
 }
 
-// Error returns the help message.
+// Error returns the help message as an error string.
 func (e *HelpRequested) Error() string {
 	return e.Message
 }
 
-// Options holds the application configuration.
+// Options holds the parsed configuration flags.
 type Options struct {
-	LogFormat  logging.LogFormat // Specify the log output format
-	ListenAddr string            // Address to listen on
-	OutputDir  string            // Output directory for generated files
+	LogFormat  logging.LogFormat // log format: json or text
+	ListenAddr string            // address to listen on (e.g., ":8080")
+	OutputDir  string            // directory to read SnapRAID output JSON files
 }
 
-// ParseFlags parses command-line flags.
+// ParseFlags parses command-line arguments into Options.
 func ParseFlags(args []string, version string) (Options, error) {
 	fs := flag.NewFlagSet("go-snapraid", flag.ContinueOnError)
 	fs.SortFlags = false
 
-	// Server settings
-	listenAddress := fs.StringP("listen-address", "a", ":8080", "Address to listen on")
-	outputDir := fs.StringP("output-dir", "o", "/output", "Output directory for generated files")
+	// Flags
+	listenAddr := fs.StringP("listen-address", "a", ":8080", "Address to listen on")
+	outputPath := fs.StringP("output-dir", "o", "/output", "Output directory for generated files")
 	logFormat := fs.StringP("log-format", "l", "json", "Log format (json | text)")
 
-	// Meta
+	// Meta flags
 	var showHelp, showVersion bool
 	fs.BoolVarP(&showHelp, "help", "h", false, "Show help and exit")
 	fs.BoolVar(&showVersion, "version", false, "Print version and exit")
 
-	// Custom usage message.
+	// Custom help output
 	fs.Usage = func() {
 		fmt.Fprintf(fs.Output(), "Usage: %s [flags]\n\nFlags:\n", strings.ToLower(fs.Name())) // nolint:errcheck
 		fs.PrintDefaults()
@@ -55,8 +55,8 @@ func ParseFlags(args []string, version string) (Options, error) {
 	if showVersion {
 		return Options{}, &HelpRequested{Message: fmt.Sprintf("%s version %s\n", fs.Name(), version)}
 	}
+
 	if showHelp {
-		// Capture custom usage output into buffer
 		var buf bytes.Buffer
 		fs.SetOutput(&buf)
 		fs.Usage()
@@ -64,13 +64,13 @@ func ParseFlags(args []string, version string) (Options, error) {
 	}
 
 	return Options{
-		ListenAddr: *listenAddress,
+		ListenAddr: *listenAddr,
 		LogFormat:  logging.LogFormat(*logFormat),
-		OutputDir:  *outputDir,
+		OutputDir:  *outputPath,
 	}, nil
 }
 
-// Validate checks whether the Config is semantically valid.
+// Validate returns an error if the log format is invalid.
 func (c *Options) Validate() error {
 	if c.LogFormat != logging.LogFormatText && c.LogFormat != logging.LogFormatJSON {
 		return fmt.Errorf("invalid log format: '%s'", c.LogFormat)
