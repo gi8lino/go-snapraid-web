@@ -11,12 +11,12 @@ RUN go mod download
 
 COPY . .
 
-RUN go build -ldflags="$LDFLAGS" -o /go-snapraid-webui ./main.go
+RUN go build -ldflags="$LDFLAGS" -o /go-snapraid-web ./main.go
 
 FROM gcr.io/distroless/static:nonroot
 
 WORKDIR /
-COPY --from=builder /go-snapraid-webui ./
+COPY --from=builder /go-snapraid-web ./
 USER nonroot:nonroot
 
-ENTRYPOINT ["./go-snapraid-webui"]
+ENTRYPOINT ["./go-snapraid-web"]

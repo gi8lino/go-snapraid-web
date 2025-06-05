@@ -1,4 +1,4 @@
-module github.com/gi8lino/go-snapraid-webui
+module github.com/gi8lino/go-snapraid-web
 
 go 1.24.3
 

@@ -6,7 +6,7 @@ import (
 	"fmt"
 	"os"
 
-	"github.com/gi8lino/go-snapraid-webui/internal/app"
+	"github.com/gi8lino/go-snapraid-web/internal/app"
 )
 
 var (

@@ -5,7 +5,7 @@ import (
 	"fmt"
 	"strings"
 
-	"github.com/gi8lino/go-snapraid-webui/internal/logging"
+	"github.com/gi8lino/go-snapraid-web/internal/logging"
 
 	flag "github.com/spf13/pflag"
 )

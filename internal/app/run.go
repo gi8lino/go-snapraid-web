@@ -9,9 +9,9 @@ import (
 	"os/signal"
 	"syscall"
 
-	"github.com/gi8lino/go-snapraid-webui/internal/flag"
-	"github.com/gi8lino/go-snapraid-webui/internal/logging"
-	"github.com/gi8lino/go-snapraid-webui/internal/server"
+	"github.com/gi8lino/go-snapraid-web/internal/flag"
+	"github.com/gi8lino/go-snapraid-web/internal/logging"
+	"github.com/gi8lino/go-snapraid-web/internal/server"
 )
 
 // Run is the single entry point for the application.
@@ -32,7 +32,7 @@ func Run(ctx context.Context, webFS fs.FS, version, commit string, args []string
 
 	// Setup logger
 	logger := logging.SetupLogger(flags.LogFormat, w)
-	logger.Info("Starting go-snapraid-webui",
+	logger.Info("Starting go-snapraid-web",
 		"version", version,
 		"commit", commit,
 	)
@@ -49,7 +49,7 @@ func Run(ctx context.Context, webFS fs.FS, version, commit string, args []string
 		logger,
 	)
 	if err := server.Run(ctx, flags.ListenAddr, router, logger); err != nil {
-		return fmt.Errorf("failed to run go-snapraid-webui: %w", err)
+		return fmt.Errorf("failed to run go-snapraid-web: %w", err)
 	}
 
 	return nil

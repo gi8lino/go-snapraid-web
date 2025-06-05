@@ -17,7 +17,7 @@ import (
 	"strings"
 	"time"
 
-	"github.com/gi8lino/go-snapraid-webui/internal/utils"
+	"github.com/gi8lino/go-snapraid-web/internal/utils"
 	"github.com/gi8lino/go-snapraid/pkg/snapraid"
 )
 

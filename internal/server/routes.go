@@ -5,7 +5,7 @@ import (
 	"log/slog"
 	"net/http"
 
-	"github.com/gi8lino/go-snapraid-webui/internal/handlers"
+	"github.com/gi8lino/go-snapraid-web/internal/handlers"
 )
 
 // NewRouter creates a new HTTP router

@@ -1,11 +1,11 @@
-# go-snapraid-webui
+# go-snapraid-web
 
 A Web UI dashboard for [go-snapraid](https://github.com/gi8lino/go-snapraid.git), built in Go. It provides a responsive, filterable, and sortable view of SnapRAID operations such as `diff`, `sync`, `scrub`, `smart`, and `touch`.
 
 ## Usage
 
 ```bash
-go-snapraid-webui [flags]
+go-snapraid-web [flags]
 ```
 
 ## Flags
@@ -20,7 +20,7 @@ go-snapraid-webui [flags]
 
 ## 📁 Expected File Structure
 
-`go-snapraid-webui` expects your `go-snapraid` output JSON files in the `--output-dir`. File names should follow the pattern:
+`go-snapraid-web` expects your `go-snapraid` output JSON files in the `--output-dir`. File names should follow the pattern:
 
 Example:
 
