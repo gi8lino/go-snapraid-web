@@ -63,6 +63,6 @@ func TestHomeHandler(t *testing.T) {
 		defer resp.Body.Close() // nolint:errcheck
 
 		assert.Equal(t, http.StatusInternalServerError, resp.StatusCode)
-		assert.Equal(t, "html/template: \"base\" is undefined\n", rec.Body.String())
+		assert.Equal(t, "html/template: \"base\" is an incomplete template\n", rec.Body.String())
 	})
 }
