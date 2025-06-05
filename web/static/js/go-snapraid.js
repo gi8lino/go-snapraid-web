@@ -36,10 +36,10 @@ async function loadSection(sec) {
   try {
     let url = `/partials/${sec}`;
 
-    if (sec === "details") {
+    if (sec === "run") {
       const hash = window.location.hash.slice(1);
       const parts = hash.split("/");
-      if (parts.length >= 3 && parts[1] === "details") {
+      if (parts.length >= 3 && parts[1] === "run") {
         const rawId = decodeURIComponent(parts.slice(2).join("/"));
         url += `?id=${encodeURIComponent(rawId)}`;
       }
@@ -71,7 +71,7 @@ async function loadSection(sec) {
           dateCell.style.cursor = "pointer";
           dateCell.addEventListener("click", () => {
             const ts = dateCell.getAttribute("data-timestamp");
-            goToDetails(ts);
+            goToRun(ts);
           });
         }
       });
@@ -86,12 +86,12 @@ async function loadSection(sec) {
       if (table && window.Tablesort) new Tablesort(table);
     }
 
-    if (sec === "details") {
+    if (sec === "run") {
       const selector = document.getElementById("runSelector");
       if (selector) {
         selector.addEventListener("change", (e) => {
           const newId = e.target.value;
-          goToDetails(newId);
+          goToRun(newId);
         });
       }
     }
@@ -102,9 +102,9 @@ async function loadSection(sec) {
   }
 }
 
-async function goToDetails(id) {
-  window.location.hash = `/details/${encodeURIComponent(id)}`;
-  await loadSection("details");
+async function goToRun(id) {
+  window.location.hash = `/run/${encodeURIComponent(id)}`;
+  await loadSection("run");
 }
 
 document.addEventListener("DOMContentLoaded", () => {
@@ -123,8 +123,8 @@ document.addEventListener("DOMContentLoaded", () => {
   if (!initial || initial === "/overview") {
     window.location.hash = "/overview";
     loadSection("overview");
-  } else if (initial.startsWith("/details")) {
-    loadSection("details");
+  } else if (initial.startsWith("/run")) {
+    loadSection("run");
   } else {
     window.location.hash = "/overview";
     loadSection("overview");

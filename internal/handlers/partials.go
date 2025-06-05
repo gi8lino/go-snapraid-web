@@ -33,7 +33,7 @@ type OverviewView struct {
 	TotalTime time.Duration
 }
 
-type DetailsView struct {
+type RunView struct {
 	Timestamp     string
 	Date          string
 	AddedFiles    []string
@@ -61,7 +61,7 @@ func PartialHandler(
 			ParseFS(
 				webFS,
 				"web/templates/overview.html",
-				"web/templates/details.html",
+				"web/templates/run.html",
 			),
 	)
 
@@ -72,7 +72,7 @@ func PartialHandler(
 		case "overview":
 			err = renderOverview(w, tmpl, outputDir)
 
-		case "details":
+		case "run":
 			id := r.URL.Query().Get("id")
 			if id == "" {
 				id, err = findLatestRunID(outputDir)
@@ -80,7 +80,7 @@ func PartialHandler(
 					break
 				}
 			}
-			err = renderDetails(w, tmpl, outputDir, id)
+			err = renderRun(w, tmpl, outputDir, id)
 			if errors.As(err, new(*notFoundError)) {
 				logger.Error("no run files found or glob failed", "error", err)
 				http.NotFound(w, r)
@@ -154,7 +154,7 @@ func renderOverview(
 	})
 }
 
-func renderDetails(
+func renderRun(
 	w io.Writer,
 	tmpl *template.Template,
 	outputDir string,
@@ -188,11 +188,11 @@ func renderDetails(
 
 	slices.Sort(allTimestamps)
 
-	return tmpl.ExecuteTemplate(w, "details", struct {
-		Detail        DetailsView
+	return tmpl.ExecuteTemplate(w, "run", struct {
+		Run           RunView
 		AllTimestamps []string
 	}{
-		Detail: DetailsView{
+		Run: RunView{
 			Timestamp:     id,
 			Date:          rr.Timestamp,
 			AddedFiles:    rr.Result.Added,
