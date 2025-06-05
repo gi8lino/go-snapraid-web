@@ -13,11 +13,7 @@ import (
 )
 
 func TestRun(t *testing.T) {
-	//	t.Parallel()
-
 	t.Run("Start and stop server lifecycle", func(t *testing.T) {
-		//		t.Parallel()
-
 		var logBuffer strings.Builder
 		logger := slog.New(slog.NewTextHandler(&logBuffer, nil))
 
