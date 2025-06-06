@@ -14,9 +14,7 @@ COPY . .
 RUN go build -ldflags="$LDFLAGS" -o /go-snapraid-web ./main.go
 
 FROM gcr.io/distroless/static:nonroot
-
 WORKDIR /
 COPY --from=builder /go-snapraid-web ./
-USER nonroot:nonroot
-
+USER 65532:65532
 ENTRYPOINT ["./go-snapraid-web"]
