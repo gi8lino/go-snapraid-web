@@ -19,9 +19,8 @@ func Run(ctx context.Context, webFS fs.FS, version, commit string, args []string
 	// Parse and validate command-line flags.
 	flags, err := flag.ParseFlags(args, version)
 	if err != nil {
-		var helpErr *flag.HelpRequested
-		if errors.As(err, &helpErr) {
-			fmt.Fprint(w, helpErr.Error()) // nolint:errcheck
+		if errors.As(err, new(*flag.HelpRequested)) {
+			fmt.Fprint(w, err.Error()) // nolint:errcheck
 			return nil
 		}
 		return fmt.Errorf("parsing error: %w", err)

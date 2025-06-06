@@ -46,10 +46,12 @@ type RunView struct {
 	RestoredFiles []string // list of restored files
 }
 
+// notFoundError is returned by the handler when a requested partial section is not found.
 type notFoundError struct {
 	msg string
 }
 
+// Error implements the error interface.
 func (e *notFoundError) Error() string { return e.msg }
 
 // PartialHandler returns an HTTP handler that renders HTML templates for partial sections.
