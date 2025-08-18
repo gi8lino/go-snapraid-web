@@ -27,9 +27,15 @@ func TestParseFlags_Help(t *testing.T) {
 
 	_, err := ParseFlags([]string{"--help"}, "v1.2.3")
 	assert.Error(t, err)
-	helpErr, ok := err.(*HelpRequested)
-	assert.True(t, ok)
-	assert.Contains(t, helpErr.Error(), "Usage: go-snapraid [flags]")
+	expected := `Usage: go-snapraid [flags]
+Flags:
+    -a, --listen-address ADDR     Listen address (Default: :8080)
+    -o, --output-dir OUTPUT-DIR   Output directory for generated files (Default: /output)
+    -l, --log-format <text|json>  Log format (Allowed: text, json) (Default: json)
+    -h, --help                    Show help
+        --version                 Show version
+`
+	assert.EqualError(t, err, expected)
 }
 
 func TestParseFlags_Version(t *testing.T) {
@@ -37,9 +43,7 @@ func TestParseFlags_Version(t *testing.T) {
 
 	_, err := ParseFlags([]string{"--version"}, "v9.8.7")
 	assert.Error(t, err)
-	verErr, ok := err.(*HelpRequested)
-	assert.True(t, ok)
-	assert.Contains(t, verErr.Error(), "go-snapraid version v9.8.7")
+	assert.EqualError(t, err, "v9.8.7")
 }
 
 func TestParseFlags_CustomValues(t *testing.T) {
@@ -55,25 +59,4 @@ func TestParseFlags_CustomValues(t *testing.T) {
 	assert.Equal(t, "0.0.0.0:9999", opts.ListenAddr)
 	assert.Equal(t, "/tmp/snap", opts.OutputDir)
 	assert.Equal(t, "text", string(opts.LogFormat))
-}
-
-func TestOptions_Validate(t *testing.T) {
-	t.Parallel()
-
-	t.Run("Valid JSON", func(t *testing.T) {
-		opts := Options{LogFormat: "json"}
-		assert.NoError(t, opts.Validate())
-	})
-
-	t.Run("Valid Text", func(t *testing.T) {
-		opts := Options{LogFormat: "text"}
-		assert.NoError(t, opts.Validate())
-	})
-
-	t.Run("Invalid Format", func(t *testing.T) {
-		opts := Options{LogFormat: "xml"}
-		err := opts.Validate()
-		assert.Error(t, err)
-		assert.Contains(t, err.Error(), "invalid log format")
-	})
 }

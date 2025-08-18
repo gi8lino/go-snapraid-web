@@ -2,7 +2,6 @@ package app
 
 import (
 	"context"
-	"errors"
 	"fmt"
 	"io"
 	"io/fs"
@@ -12,6 +11,8 @@ import (
 	"github.com/gi8lino/go-snapraid-web/internal/flag"
 	"github.com/gi8lino/go-snapraid-web/internal/logging"
 	"github.com/gi8lino/go-snapraid-web/internal/server"
+
+	"github.com/containeroo/tinyflags"
 )
 
 // Run is the single entry point for the application.
@@ -19,14 +20,11 @@ func Run(ctx context.Context, webFS fs.FS, version, commit string, args []string
 	// Parse and validate command-line flags.
 	flags, err := flag.ParseFlags(args, version)
 	if err != nil {
-		if errors.As(err, new(*flag.HelpRequested)) {
-			fmt.Fprint(w, err.Error()) // nolint:errcheck
+		if tinyflags.IsHelpRequested(err) || tinyflags.IsVersionRequested(err) {
+			fmt.Fprintf(w, "%s\n", err)
 			return nil
 		}
-		return fmt.Errorf("parsing error: %w", err)
-	}
-	if err := flags.Validate(); err != nil {
-		return fmt.Errorf("invalid CLI flags: %w", err)
+		return fmt.Errorf("failed to parse CLI flags: %w", err)
 	}
 
 	// Setup logger
