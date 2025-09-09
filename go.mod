@@ -3,7 +3,7 @@ module github.com/gi8lino/go-snapraid-web
 go 1.25.0
 
 require (
-	github.com/containeroo/tinyflags v0.0.42
+	github.com/containeroo/tinyflags v0.0.49
 	github.com/gi8lino/go-snapraid v0.1.8
 	github.com/stretchr/testify v1.10.0
 )
