@@ -46,6 +46,13 @@ type RunView struct {
 	RestoredFiles []string // list of restored files
 }
 
+type runResultCompat struct {
+	Timestamp string              `json:"timestamp"`
+	Result    snapraid.RunResult  `json:"result"`
+	Timings   snapraid.RunTimings `json:"timings"`
+	Error     json.RawMessage     `json:"error"`
+}
+
 // notFoundError is returned by the handler when a requested partial section is not found.
 type notFoundError struct {
 	msg string
@@ -179,7 +186,7 @@ func renderRun(
 	}
 	defer f.Close() // nolint:errcheck
 
-	var result snapraid.RunResult
+	var result runResultCompat
 	if err := json.NewDecoder(f).Decode(&result); err != nil {
 		return fmt.Errorf("JSON decode %q failed: %w", fullPath, err)
 	}
@@ -220,7 +227,7 @@ func findLatestRunID(outputDir string) (string, error) {
 	if err != nil || len(matches) == 0 {
 		return "", fmt.Errorf("no run files found or glob failed: %w", err)
 	}
-	slices.Sort(matches)
-	latest := filepath.Base(matches[0])
+	slices.Sort(matches) // RFC3339 file names sort lexicographically by time
+	latest := filepath.Base(matches[len(matches)-1])
 	return strings.TrimSuffix(latest, ".json"), nil
 }
