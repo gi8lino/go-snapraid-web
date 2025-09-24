@@ -210,12 +210,12 @@ func renderRun(
 		Run: RunView{
 			Timestamp:     runID,
 			Date:          result.Timestamp,
-			AddedFiles:    result.Result.Added,
-			RemovedFiles:  result.Result.Removed,
-			UpdatedFiles:  result.Result.Updated,
-			MovedFiles:    result.Result.Moved,
-			CopiedFiles:   result.Result.Copied,
-			RestoredFiles: result.Result.Restored,
+			AddedFiles:    result.Result.Result.Added,
+			RemovedFiles:  result.Result.Result.Removed,
+			UpdatedFiles:  result.Result.Result.Updated,
+			MovedFiles:    result.Result.Result.Moved,
+			CopiedFiles:   result.Result.Result.Copied,
+			RestoredFiles: result.Result.Result.Restored,
 		},
 		AllTimestamps: allTimestamps,
 	})
