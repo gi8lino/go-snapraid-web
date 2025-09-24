@@ -48,7 +48,7 @@ type RunView struct {
 
 type runResultCompat struct {
 	Timestamp string              `json:"timestamp"`
-	Result    snapraid.RunResult  `json:"result"`
+	Result    snapraid.DiffResult `json:"result"`
 	Timings   snapraid.RunTimings `json:"timings"`
 	Error     json.RawMessage     `json:"error"`
 }
@@ -136,7 +136,7 @@ func renderOverview(
 		}
 		defer f.Close() // nolint:errcheck
 
-		var result snapraid.RunResult
+		var result runResultCompat
 		if err := json.NewDecoder(f).Decode(&result); err != nil {
 			return fmt.Errorf("JSON decode of %q failed: %w", fullPath, err)
 		}
@@ -210,12 +210,12 @@ func renderRun(
 		Run: RunView{
 			Timestamp:     runID,
 			Date:          result.Timestamp,
-			AddedFiles:    result.Result.Result.Added,
-			RemovedFiles:  result.Result.Result.Removed,
-			UpdatedFiles:  result.Result.Result.Updated,
-			MovedFiles:    result.Result.Result.Moved,
-			CopiedFiles:   result.Result.Result.Copied,
-			RestoredFiles: result.Result.Result.Restored,
+			AddedFiles:    result.Result.Added,
+			RemovedFiles:  result.Result.Removed,
+			UpdatedFiles:  result.Result.Updated,
+			MovedFiles:    result.Result.Moved,
+			CopiedFiles:   result.Result.Copied,
+			RestoredFiles: result.Result.Restored,
 		},
 		AllTimestamps: allTimestamps,
 	})
