@@ -19,20 +19,22 @@ import (
 func Run(ctx context.Context, webFS fs.FS, version, commit string, args []string, w io.Writer) error {
 	// Parse and validate command-line flags.
 	flags, err := flag.ParseFlags(args, version)
-	if err != nil {
-		if tinyflags.IsHelpRequested(err) || tinyflags.IsVersionRequested(err) {
-			fmt.Fprintf(w, "%s\n", err)
-			return nil
-		}
-		return fmt.Errorf("failed to parse CLI flags: %w", err)
-	}
 
-	// Setup logger
+	// Setup logger immediately so startup errors are correctly logged.
 	logger := logging.SetupLogger(flags.LogFormat, w)
 	logger.Info("Starting go-snapraid-web",
 		"version", version,
 		"commit", commit,
 	)
+
+	if err != nil {
+		if tinyflags.IsHelpRequested(err) || tinyflags.IsVersionRequested(err) {
+			_, _ = fmt.Fprintf(w, "%s\n", err)
+			return nil
+		}
+		logger.Error("Failed to parse CLI flags", "error", err)
+		return err
+	}
 
 	// Create a context to listen for shutdown signals
 	ctx, stop := signal.NotifyContext(ctx, syscall.SIGINT, syscall.SIGTERM)
@@ -46,7 +48,8 @@ func Run(ctx context.Context, webFS fs.FS, version, commit string, args []string
 		logger,
 	)
 	if err := server.Run(ctx, flags.ListenAddr, router, logger); err != nil {
-		return fmt.Errorf("failed to run go-snapraid-web: %w", err)
+		logger.Error("Failed to run go-snapraid-web", "error", err)
+		return err
 	}
 
 	return nil
