@@ -1,5 +1,9 @@
 # go-snapraid-web
 
+> [!WARNING]
+> **Deprecated:** This project is no longer recommended for new use.
+> Please use [`snapraid-daemon`](https://github.com/amadvance/snapraid-daemon/) instead, which is the actively maintained replacement.
+
 A Web UI dashboard for [go-snapraid](https://github.com/gi8lino/go-snapraid.git), built in Go. It provides a responsive, filterable, and sortable view of SnapRAID operations such as `diff`, `sync`, `scrub`, `smart`, and `touch`.
 
 ## Usage
